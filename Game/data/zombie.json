@@ -2,7 +2,7 @@
     
 {
     "name": "Zombie",
-    "attack": 25,
+    "attack": 10,
     "health":  150,
     "speed": 10
 }

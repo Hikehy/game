@@ -9,6 +9,8 @@ import platform
 #SUPER DUPER IMPORTANT MAIN VARIABLES
 userinput = "null"
 enemy = None
+enemydodgesuccess = False
+dodgesuccess = False
 
 #loads objects from json
 def importjson(file, name):
@@ -26,13 +28,15 @@ def clearconsole():
 
 
 #Creating Objects
-importjson("./data/player.json", "player")
-importjson("./data/zombie.json", "zombie")
-importjson("./data/George.json", "george")
-importjson("./data/skeleton.json", "skeleton")
+def loadalljson():
+    importjson("./data/player.json", "player")
+    importjson("./data/zombie.json", "zombie")
+    importjson("./data/George.json", "george")
+    importjson("./data/skeleton.json", "skeleton")
 
 #choose ennemy
 def selectenemy():
+    loadalljson()
     global enemy
     data = [zombie, skeleton]
     enemy = random.choice(data)
@@ -49,30 +53,92 @@ def draw():
 
 #Main funtcion where code goes
 def main():
+    global enemydodgesuccess
+    global dodgesuccess
+    dodgesuccess = False
     userinput = input("Option: ")
     match userinput:
         case "0":
             exit(0)
         case "1":
-            enemy["health"] -= random.randint(0, player["attack"])
+            if not enemydodgesuccess == True:
+                attackvalue = random.randint(1, player["attack"])
+                enemy["health"] -= attackvalue
+                print("You dealt: ", attackvalue, " damage")
+                input("press enter to continue")
+            else:
+                print(enemy["name"], " dodged attack")
+                input("press enter to continue")
+        case "2":
+            dodge = random.randint(1, 100)
+            if dodge < player["speed"]:
+                clearconsole()
+                print("you used dodge used dodge...")
+                input("press enter to see result")
+                print("your dodge failed")
+                input("press enter to continue")
+                clearconsole()
+            else:
+                clearconsole()
+                print("you used dodge used dodge...")
+                input("press enter to see result")
+                print("your dodge succeeded")
+                input("press enter to continue")
+                dodgesuccess = True
+                clearconsole()
+            
         case _:
             clearconsole()
             print("Not VALID")
             input("")
             draw()
             main()
-    enemydodge = random.randint(1, 1000)
-    
 
-
+    enemydodgesuccess = False
+    if enemy["health"] == 0 or enemy["health"] < 0:
+        print("you defeated the enemy!!")
+        input("press enter to continue")
+        gameloop()
+    else:
+        enemydodge = random.randint(1, 100)
+        enemyattack = random.randint(1, enemy["attack"])
+        enemychoices = random.randint(1, 2)
+        if enemychoices == 1:
+            if dodgesuccess != True:
+                clearconsole()
+                print(enemy["name"]," dealt ",enemyattack, "damage")
+                player["health"] -= enemyattack
+                input("press enter to contine")
+            else:
+                clearconsole()
+                print("You dodged ", enemy["name"], "'s attack")
+                input("press enter to contine")
+        else:
+            if enemydodge != enemy["speed"] or not enemydodge < enemy["speed"]:   
+                clearconsole()
+                print("enemy used dodge...")
+                input("press enter to see result")
+                print("enemy dodge failed")
+                input("press enter to continue")
+   
+                clearconsole()
+            else:
+                clearconsole()
+                print("enemy used dodge...")
+                input("press enter to see result")
+                print("enemy dodge succeded")
+                input("press enter to continue")
+                clearconsole()
+                enemydodgesuccess = True
 #Keeps the game running
 def gameloop():
     selectenemy()
     while True:
         clearconsole()
         if enemy["health"] < 0 or enemy["health"] == 0:
-            print("you win!!!!!")
-            exit(0)
+            print("you defeated the enemy!!")
+            input("press enter to continue")
+            gameloop()
         elif player["health"] < 0 or player["health"] == 0:
             print("you died...")
             exit(0)
