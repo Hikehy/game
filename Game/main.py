@@ -43,6 +43,7 @@ def selectenemy():
 
 selectenemy()
 
+#Draws terminal screen
 def draw():
     print(enemy["name"])
     print(enemy["health"],"\n\n\n\n\n")
@@ -56,10 +57,13 @@ def main():
     global enemydodgesuccess
     global dodgesuccess
     dodgesuccess = False
+    #processing user input
     userinput = input("Option: ")
     match userinput:
+        #Exiting Program
         case "0":
             exit(0)
+        #Attacking enemy
         case "1":
             if not enemydodgesuccess == True:
                 attackvalue = random.randint(1, player["attack"])
@@ -69,6 +73,7 @@ def main():
             else:
                 print(enemy["name"], " dodged attack")
                 input("press enter to continue")
+        #Dodging
         case "2":
             dodge = random.randint(1, 100)
             if dodge < player["speed"]:
@@ -86,23 +91,26 @@ def main():
                 input("press enter to continue")
                 dodgesuccess = True
                 clearconsole()
-            
+        #Error Handeling
         case _:
             clearconsole()
             print("Not VALID")
             input("")
             draw()
             main()
-
+    #Checking and updating enemy stats
     enemydodgesuccess = False
     if enemy["health"] == 0 or enemy["health"] < 0:
         print("you defeated the enemy!!")
         input("press enter to continue")
         gameloop()
     else:
+        #Enemy Choices
+            #setting enemy chances
         enemydodge = random.randint(1, 100)
         enemyattack = random.randint(1, enemy["attack"])
         enemychoices = random.randint(1, 2)
+        #Enemy attack
         if enemychoices == 1:
             if dodgesuccess != True:
                 clearconsole()
@@ -113,6 +121,7 @@ def main():
                 clearconsole()
                 print("You dodged ", enemy["name"], "'s attack")
                 input("press enter to contine")
+        #Enemy dodge
         else:
             if enemydodge != enemy["speed"] or not enemydodge < enemy["speed"]:   
                 clearconsole()
@@ -150,4 +159,5 @@ def gameloop():
             main()
             clearconsole()
 
+#init game
 gameloop()
