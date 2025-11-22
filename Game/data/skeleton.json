@@ -1,0 +1,6 @@
+{   
+    "name": "Skeleton",
+    "health": 10,
+    "attack": 50,
+    "speed": 20
+}
